@@ -924,7 +924,7 @@ function onDrop(e){
     if(idx2>=0){DATA[idx2].owner=newOwner;DATA[idx2].q=newQ;}
     render();toast('Moved (preview mode)');return;
   }
-  db.collection(COLLECTION).doc(String(id)).update({owner:newOwner,q:newQ})
+  db.collection(COLLECTION).doc(String(id)).set({owner:newOwner,q:newQ},{merge:true})
     .then(()=>toast('Moved from '+fromLabel+' \u2192 '+newOwner+' \u00b7 '+newQ))
     .catch(e=>toast('Move failed: '+e.message));
 }
@@ -1027,21 +1027,23 @@ function saveEdit(){
     _deadline:deadlineVal,
     ...dims,
   };
+  // Strip undefined values — Firestore rejects them
+  const clean=Object.fromEntries(Object.entries(updated).filter(([,v])=>v!==undefined));
+
   if(!IS_CONFIGURED){
-    // Preview mode — update local DATA only
-    if(editingId!==null){const idx=DATA.findIndex(x=>x._id===editingId);if(idx>=0)DATA[idx]={...DATA[idx],...updated};}
-    else{DATA.push({...updated,_id:nextId++});}
-    closeDrawer();render();toast(IS_CONFIGURED?'Saved':'Saved locally (preview mode)');return;
+    if(editingId!==null){const idx=DATA.findIndex(x=>x._id===editingId);if(idx>=0)DATA[idx]={...DATA[idx],...clean};}
+    else{DATA.push({...clean,_id:nextId++});}
+    closeDrawer();render();toast('Saved (preview mode — not synced)');return;
   }
   if(editingId!==null){
-    db.collection(COLLECTION).doc(String(editingId)).update(updated)
+    db.collection(COLLECTION).doc(String(editingId)).set(clean,{merge:true})
       .then(()=>toast('Project updated'))
-      .catch(e=>toast('Save failed: '+e.message));
+      .catch(e=>{console.error('Save error:',e);toast('Save failed: '+e.message);});
   }else{
     const newId=nextId++;
-    db.collection(COLLECTION).doc(String(newId)).set({...updated,_id:newId})
+    db.collection(COLLECTION).doc(String(newId)).set({...clean,_id:newId})
       .then(()=>toast('Project added'))
-      .catch(e=>toast('Save failed: '+e.message));
+      .catch(e=>{console.error('Save error:',e);toast('Save failed: '+e.message);});
   }
   closeDrawer();
 }
