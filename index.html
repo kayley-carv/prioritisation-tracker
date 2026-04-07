@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Roadmap — Q2 Data Acquisition</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#F7F6F2;--surface:#FFFFFF;--surface2:#F0EFE9;
+    --border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.14);
+    --text:#1A1917;--text-2:#6B6860;--text-3:#A09D96;
+    --now-bg:#EEEDFE;--now-border:#AFA9EC;--now-text:#3C3489;--now-head:#26215C;
+    --q2-bg:#E1F5EE;--q2-border:#5DCAA5;--q2-text:#0F6E56;--q2-head:#04342C;
+    --q3-bg:#FAEEDA;--q3-border:#EF9F27;--q3-text:#854F0B;--q3-head:#412402;
+    --q4-bg:#F1EFE8;--q4-border:#B4B2A9;--q4-text:#5F5E5A;--q4-head:#2C2C2A;
+    --high-bg:#FCEBEB;--high-border:#F09595;--high-text:#501313;
+    --med-bg:#FAEEDA;--med-border:#EF9F27;--med-text:#412402;
+    --low-bg:#EAF3DE;--low-border:#97C459;--low-text:#173404;
+    --live-bg:#E6F1FB;--live-border:#85B7EB;--live-text:#042C53;
+    --unscore-bg:#F1EFE8;--unscore-border:#B4B2A9;--unscore-text:#2C2C2A;
+    --radius:6px;--radius-lg:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh}
+
+  /* ── Header ── */
+  .header{background:var(--surface);border-bottom:1px solid var(--border);padding:18px 28px 14px;position:sticky;top:0;z-index:200}
+  .header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+  .header-title{font-size:17px;font-weight:600;letter-spacing:-0.3px}
+  .header-sub{font-size:12px;color:var(--text-2)}
+  .header-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap}
+  .updated{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-3);background:var(--surface2);padding:3px 8px;border-radius:4px}
+  .hbtn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-2);transition:background 0.15s;line-height:1}
+  .hbtn:hover{background:var(--surface2)}
+  .hbtn.active{background:var(--text);color:var(--surface);border-color:var(--text)}
+  .hbtn-add{background:#1A1917;color:#fff;border-color:#1A1917}
+  .hbtn-add:hover{background:#333;color:#fff}
+  .hbtn-reset{color:#854F0B;border-color:#EF9F27;background:#FFFBF5}
+  .hbtn-reset:hover{background:#FAEEDA}
+  .edit-badge{display:none;font-size:10px;padding:2px 7px;border-radius:20px;background:#FAEEDA;color:#854F0B;border:1px solid #EF9F27;font-weight:500}
+  .edit-badge.show{display:inline-block}
+
+  /* ── Controls ── */
+  .controls{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .ctrl-group{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+  .ctrl-label{font-size:11px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:0.4px;margin-right:2px;white-space:nowrap}
+  .sep{width:1px;height:18px;background:var(--border-strong);margin:0 6px}
+  .tog{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid transparent;user-select:none;transition:opacity 0.15s,transform 0.1s;white-space:nowrap}
+  .tog:hover{transform:translateY(-1px)}
+  .tog:active{transform:scale(0.97)}
+  .tog.off{opacity:0.25}
+  .tog-high{background:var(--high-bg);color:var(--high-text);border-color:var(--high-border)}
+  .tog-med{background:var(--med-bg);color:var(--med-text);border-color:var(--med-border)}
+  .tog-low{background:var(--low-bg);color:var(--low-text);border-color:var(--low-border)}
+  .tog-live{background:var(--live-bg);color:var(--live-text);border-color:var(--live-border)}
+  .tog-unscore{background:var(--unscore-bg);color:var(--unscore-text);border-color:var(--unscore-border)}
+  .tog-neutral{background:var(--surface2);color:var(--text-2);border-color:var(--border-strong)}
+
+  /* ── Main ── */
+  .main{padding:18px 28px 80px;overflow-x:auto}
+
+  /* ── Alert banners ── */
+  .alert-banner{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:var(--radius-lg);border:1px solid;margin-bottom:10px;font-size:12px;line-height:1.5}
+  .alert-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+  .alert-close{margin-left:auto;cursor:pointer;background:none;border:none;font-size:15px;color:inherit;opacity:0.5;padding:0 2px;flex-shrink:0;line-height:1}
+  .alert-close:hover{opacity:1}
+
+  /* ── Stats bar ── */
+  .stats-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 16px;flex:1;min-width:100px}
+  .stat-card.stat-warn{border-color:#EF9F27;background:#FFFBF5}
+  .stat-label{font-size:11px;color:var(--text-2);margin-bottom:3px}
+  .stat-val{font-size:22px;font-weight:600;letter-spacing:-0.5px}
+  .stat-val.warn{color:#412402}
+  .stat-sub{font-size:10px;color:var(--text-3);margin-top:1px;font-family:'DM Mono',monospace}
+  .stat-action{font-size:10px;color:#854F0B;margin-top:2px;font-weight:500}
+
+  /* ── Legend ── */
+  .legend{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:14px;font-size:11px;color:var(--text-2)}
+  .legend-item{display:flex;align-items:center;gap:5px}
+  .legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+  .si{font-size:8px;flex-shrink:0;margin-top:1px}
+  .si-live{color:#1D9E75}.si-progress{color:#378ADD}.si-nostart{color:#B4B2A9}.si-hold{color:#D85A30}.si-ready{color:#7F77DD}
+
+  /* ── Grid table ── */
+  .grid-table{border-collapse:separate;border-spacing:0;width:100%;min-width:860px;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
+  .grid-table thead tr th{padding:10px 14px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap}
+  .grid-table thead tr th:not(:last-child){border-right:1px solid var(--border)}
+  th.q-now{color:var(--now-head)}th.q-q2{color:var(--q2-head)}th.q-q3{color:var(--q3-head)}th.q-q4{color:var(--q4-head)}
+  th.q-now::before,th.q-q2::before,th.q-q3::before,th.q-q4::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  th.q-now::before{background:var(--now-border)}th.q-q2::before{background:var(--q2-border)}th.q-q3::before{background:var(--q3-border)}th.q-q4::before{background:var(--q4-border)}
+  .grid-table tbody tr td{vertical-align:top;padding:10px;border-bottom:1px solid var(--border)}
+  .grid-table tbody tr:last-child td{border-bottom:none}
+  .grid-table tbody tr td:not(:last-child){border-right:1px solid var(--border)}
+  .grid-table tbody tr:hover td{background:#FAFAF8}
+
+  /* ── Person cell ── */
+  .person-cell{width:130px;min-width:130px;padding:12px !important}
+  .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;margin-bottom:6px}
+  .person-name{font-size:12px;font-weight:600;line-height:1.2;margin-bottom:2px}
+  .person-count{font-size:10px;color:var(--text-3);margin-bottom:5px;font-family:'DM Mono',monospace}
+  .load-bar{display:flex;gap:2px;margin-bottom:4px}
+  .lb-seg{height:4px;border-radius:2px;min-width:3px}
+  .lb-now{background:var(--now-border)}.lb-q2{background:var(--q2-border)}.lb-q3{background:var(--q3-border)}.lb-q4{background:var(--q4-border)}
+  .load-chip{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
+  .lc-red{background:var(--high-bg);color:var(--high-text)}.lc-amber{background:var(--med-bg);color:var(--med-text)}.lc-green{background:var(--low-bg);color:var(--low-text)}.lc-gray{background:var(--unscore-bg);color:var(--unscore-text)}
+
+  /* ── Quarter cells ── */
+  .q-cell{min-width:170px;min-height:52px;vertical-align:top;transition:background 0.12s,outline 0.12s}
+  .sec-head{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-3);padding:5px 0 2px;border-top:1px dashed var(--border);margin-top:5px}
+  .sec-head:first-child{border-top:none;padding-top:0;margin-top:0}
+
+  /* ── Project cards ── */
+  .card{border-radius:var(--radius);padding:5px 8px 2px;margin-bottom:4px;border:1px solid transparent;transition:box-shadow 0.15s,border-color 0.15s,opacity 0.15s;cursor:grab;position:relative;overflow:hidden}
+  .card:last-child{margin-bottom:0}
+  .card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+  .card:hover .edit-hint{opacity:1}
+  .card:hover .drag-handle{opacity:0.6}
+  .card:active{cursor:grabbing}
+  .card.hidden{display:none}
+  .card.dragging{opacity:0.25;transform:rotate(0.8deg)}
+
+  /* Drag handle */
+  .drag-handle{font-size:11px;color:var(--text-3);opacity:0;transition:opacity 0.15s;margin-right:3px;flex-shrink:0;line-height:1;letter-spacing:-1px;user-select:none}
+
+  /* Drop zones */
+  .q-cell.drop-active{background:rgba(175,169,236,0.13)!important;outline:2px dashed #AFA9EC;outline-offset:-4px}
+  .q-cell.drop-active .empty-cell{color:#7F77DD;font-weight:500}
+  .card-high{background:var(--high-bg);border-color:var(--high-border)}.card-med{background:var(--med-bg);border-color:var(--med-border)}.card-low{background:var(--low-bg);border-color:var(--low-border)}.card-ongoing{background:var(--live-bg);border-color:var(--live-border)}.card-unscored{background:var(--unscore-bg);border-color:var(--unscore-border)}
+  .card-high .card-desc{color:var(--high-text)}.card-med .card-desc{color:var(--med-text)}.card-low .card-desc{color:var(--low-text)}.card-ongoing .card-desc{color:var(--live-text)}.card-unscored .card-desc{color:var(--unscore-text)}
+  .card-desc{font-size:11px;font-weight:500;line-height:1.35;margin-bottom:3px;display:flex;align-items:baseline;gap:3px}
+  .card-meta{display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin-bottom:4px}
+  .edit-hint{font-size:9px;color:var(--text-3);opacity:0;transition:opacity 0.15s;margin-left:auto;flex-shrink:0;white-space:nowrap}
+
+  /* Score bar */
+  .score-bar{height:3px;margin:0 -8px;background:rgba(0,0,0,0.05)}
+  .score-fill{height:100%}
+  .card-high .score-fill{background:var(--high-border)}.card-med .score-fill{background:var(--med-border)}.card-low .score-fill{background:var(--low-border)}.card-ongoing .score-fill{background:var(--live-border)}.card-unscored .score-fill{background:transparent}
+
+  /* Tags */
+  .tag{display:inline-block;padding:1px 5px;border-radius:20px;font-size:10px;font-weight:500;white-space:nowrap}
+  .tag-data{background:#EEEDFE;color:#534AB7}.tag-bau{background:#E1F5EE;color:#085041}
+  .score-t{font-size:10px;color:var(--text-3);font-family:'DM Mono',monospace}
+  .empty-cell{font-size:11px;color:var(--text-3);padding:2px 0;display:block}
+
+  /* Compact mode */
+  body.compact .card-meta{display:none}
+  body.compact .score-bar{display:none}
+  body.compact .card{padding:4px 8px 4px}
+  body.compact .alert-banner,.compact .legend,.compact .stats-bar{display:none}
+
+  /* ── Drawer ── */
+  .drawer{position:fixed;top:0;right:0;width:330px;height:100vh;background:var(--surface);border-left:1px solid var(--border-strong);z-index:300;transform:translateX(100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;overflow:hidden}
+  .drawer.open{transform:translateX(0)}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .drawer-title{font-size:14px;font-weight:600;letter-spacing:-0.2px}
+  .drawer-close{background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-3);padding:2px 4px;border-radius:4px;line-height:1}
+  .drawer-close:hover{color:var(--text);background:var(--surface2)}
+  .drawer-body{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:13px}
+  .drawer-foot{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;background:var(--surface)}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .field-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-3)}
+  .field-input{width:100%;padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:12px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);transition:border-color 0.15s;outline:none;resize:vertical}
+  .field-input:focus{border-color:#AFA9EC}
+  select.field-input{cursor:pointer}
+  .radio-group{display:flex;gap:12px}
+  .radio-opt{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer}
+  .radio-opt input{cursor:pointer}
+  .btn-save{flex:1;padding:9px;background:#1A1917;color:#fff;border:none;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
+  .btn-save:hover{background:#333}
+  .btn-delete{padding:9px 14px;background:none;color:#A32D2D;border:1px solid #F09595;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
+  .btn-delete:hover{background:var(--high-bg)}
+  #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.18);z-index:299}
+  #overlay.open{display:block}
+
+  /* ── Toast ── */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1917;color:#fff;font-size:12px;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity 0.2s,transform 0.2s;z-index:400;pointer-events:none;white-space:nowrap}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media print{
+    .header{position:static}.controls,.header-actions{display:none}
+    .card.hidden{display:none!important}.alert-banner{display:none}
+    .drawer,#overlay,.toast{display:none!important}
+    body{background:#fff}.main{padding:12px}
+  }
+
+  /* ── Scoring section ── */
+  .scoring-section{background:var(--surface2);border-radius:var(--radius-lg);padding:12px}
+  .scoring-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+  .scoring-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-3)}
+  .score-live{display:flex;align-items:baseline;gap:4px}
+  .score-live-num{font-size:30px;font-weight:600;letter-spacing:-1.5px;color:var(--text-3);transition:color 0.25s;font-family:'DM Mono',monospace;line-height:1}
+  .score-live-num.sl-high{color:#0F6E56}
+  .score-live-num.sl-med{color:#854F0B}
+  .score-live-num.sl-low{color:#A32D2D}
+  .score-live-sub{font-size:10px;color:var(--text-3);line-height:1}
+  .score-dims{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+  .dim-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .dim-full{grid-column:1/-1}
+  .dim-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-3);margin-bottom:2px}
+  .dim-sel{width:100%;padding:5px 7px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:11px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);outline:none;cursor:pointer;appearance:auto}
+  .dim-sel:focus{border-color:#AFA9EC}
+  .dim-sel.filled{border-color:#AFA9EC;background:#FAFAFE}
+  .score-meter{margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+  .score-meter-track{height:7px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:5px}
+  .score-meter-fill{height:100%;border-radius:4px;transition:width 0.35s,background 0.35s;background:#B4B2A9}
+  .score-meter-row{display:flex;justify-content:space-between;align-items:center}
+  .score-meter-lbl{font-size:10px;color:var(--text-3);font-family:'DM Mono',monospace}
+  .score-meter-hint{font-size:10px;color:var(--text-3);font-style:italic}
+  .score-wt{display:flex;gap:3px;margin-bottom:9px;flex-wrap:wrap}
+  .score-wt-chip{font-size:9px;padding:2px 6px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--text-3);white-space:nowrap}
+
+  /* ── Deadline ── */
+  .deadline-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:500;padding:1px 6px;border-radius:20px;white-space:nowrap}
+  .deadline-overdue{background:#FCEBEB;color:#A32D2D;border:1px solid #F09595}
+  .deadline-soon{background:#FAEEDA;color:#712B13;border:1px solid #EF9F27}
+  .deadline-ok{background:#F1EFE8;color:#5F5E5A;border:1px solid #B4B2A9}
+  .deadline-hint{font-size:10px;margin-top:3px;font-style:italic}
+  input[type="date"].field-input{cursor:pointer}
+
+  /* ── Mismatch warning ── */
+  .mismatch-panel{display:none;border-radius:var(--radius);padding:9px 11px;gap:8px;align-items:flex-start}
+  .mismatch-panel.active{display:flex}
+  .mp-alert{background:#FCEBEB;border:1px solid #F09595}
+  .mp-warn{background:#FAEEDA;border:1px solid #EF9F27}
+  .mp-info{background:#F1EFE8;border:1px solid #B4B2A9}
+  .mismatch-icon{font-size:13px;flex-shrink:0;line-height:1.3}
+  .mp-alert .mismatch-icon{color:#A32D2D}
+  .mp-warn .mismatch-icon{color:#854F0B}
+  .mp-info .mismatch-icon{color:#5F5E5A}
+  .mismatch-body{flex:1;min-width:0}
+  .mismatch-title{font-size:11px;font-weight:600;margin-bottom:2px}
+  .mp-alert .mismatch-title{color:#501313}
+  .mp-warn .mismatch-title{color:#412402}
+  .mp-info .mismatch-title{color:#2C2C2A}
+  .mismatch-msg{font-size:11px;line-height:1.45;color:inherit;opacity:.85}
+  .card.mm-alert{box-shadow:inset 3px 0 0 #F09595!important}
+  .card.mm-warn{box-shadow:inset 3px 0 0 #EF9F27!important}
+  .mm-flag{font-size:9px;flex-shrink:0;margin-left:1px;cursor:help;opacity:.8}
+  .mm-flag-alert{color:#A32D2D}
+  .mm-flag-warn{color:#854F0B}
+
+  /* ── Loading overlay ── */
+  #loading{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+  .spinner{width:32px;height:32px;border:2px solid var(--border-strong);border-top-color:var(--text);border-radius:50%;animation:spin 0.7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading-label{font-size:12px;color:var(--text-3)}
+  .sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#5DCAA5;margin-right:5px;animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<div id="loading"><div class="spinner"></div><div class="loading-label">Loading roadmap…</div></div>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-title">Team Roadmap <span style="color:var(--text-3);font-weight:400">— Q2 Data Acquisition</span></div>
+      <div class="header-sub">First-Party Data · All owners · Click any card to edit</div>
+    </div>
+    <div class="header-actions">
+      <span class="updated" id="updated-date"></span>
+      <span class="edit-badge show" id="sync-indicator"><span class="sync-dot"></span>Live — changes sync instantly</span>
+      <button class="hbtn hbtn-add" onclick="openNew()">+ Add project</button>
+      <button class="hbtn" id="compact-btn" onclick="toggleCompact()">Compact view</button>
+      <button class="hbtn" onclick="window.print()">Print / Export</button>
+    </div>
+  </div>
+  <div class="controls">
+    <span class="ctrl-label">Effort</span>
+    <div class="ctrl-group">
+      <span class="tog tog-high" data-f="high" onclick="togEffort(this)">High</span>
+      <span class="tog tog-med" data-f="med" onclick="togEffort(this)">Medium</span>
+      <span class="tog tog-low" data-f="low" onclick="togEffort(this)">Low</span>
+      <span class="tog tog-live" data-f="ongoing" onclick="togEffort(this)">Ongoing</span>
+      <span class="tog tog-unscore" data-f="unscored" onclick="togEffort(this)">Unscored</span>
+    </div>
+    <span class="sep"></span>
+    <span class="ctrl-label">Section</span>
+    <div class="ctrl-group">
+      <span class="tog tog-neutral" data-f="Data" onclick="togSec(this)">Data Specific</span>
+      <span class="tog tog-neutral" data-f="BAU" onclick="togSec(this)">BAU</span>
+    </div>
+    <span class="sep"></span>
+    <span class="ctrl-label">Show</span>
+    <div class="ctrl-group">
+      <span class="tog tog-neutral" data-f="BA" onclick="togIP(this)">BA</span>
+      <span class="tog tog-neutral" data-f="HSR" onclick="togIP(this)">HSR</span>
+      <span class="tog tog-neutral" data-f="THE LINE" onclick="togIP(this)">The Line</span>
+      <span class="tog tog-neutral" data-f="WNTT" onclick="togIP(this)">WNTT</span>
+      <span class="tog tog-neutral" data-f="DOAC" onclick="togIP(this)">DOAC</span>
+      <span class="tog tog-neutral" data-f="ALL" onclick="togIP(this)">Cross-IP</span>
+      <span class="tog tog-neutral" data-f="OTHER" onclick="togIP(this)">Other</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="legend">
+    <span style="font-weight:500;color:var(--text-2);margin-right:2px">Effort:</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--high-border)"></span>High</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--med-border)"></span>Medium</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--low-border)"></span>Low</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--live-border)"></span>Ongoing</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--unscore-border)"></span>Unscored</span>
+    <span style="margin-left:6px;padding-left:6px;border-left:1px solid var(--border);font-size:11px;color:var(--text-3)">
+      <span class="si si-live">●</span> Live &nbsp;
+      <span class="si si-progress">●</span> In progress &nbsp;
+      <span class="si si-nostart">○</span> Not started &nbsp;
+      <span class="si si-hold">■</span> On hold &nbsp;
+      <span class="si si-ready">✓</span> Ready
+    </span>
+    <span style="margin-left:6px;padding-left:6px;border-left:1px solid var(--border);font-size:11px;color:var(--text-3)">Click any card to edit</span>
+  </div>
+
+  <table class="grid-table">
+    <thead>
+      <tr>
+        <th style="width:130px">Person</th>
+        <th class="q-now q-cell">Now</th>
+        <th class="q-q2 q-cell">Q2 — Apr–Jun</th>
+        <th class="q-q3 q-cell">Q3 — Jul–Sep</th>
+        <th class="q-q4 q-cell">Q4+ — Oct onwards</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- Edit drawer -->
+<div id="overlay" onclick="closeDrawer()"></div>
+<div id="drawer" class="drawer">
+  <div class="drawer-head">
+    <span id="drawer-title" class="drawer-title">Edit project</span>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="field">
+      <label class="field-label">Description</label>
+      <textarea id="ed-desc" class="field-input" rows="3" placeholder="Project description…"></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Owner</label>
+      <select id="ed-owner" class="field-input">
+        <option>Mason</option><option>Kat</option><option>Kat / Mason</option>
+        <option>Kat / Maria</option><option>Maria</option><option>Tash</option>
+        <option>Kat / Tash</option><option>Kayley</option><option>Clare</option>
+        <option>Pollyanna</option><option>Maria / Clare</option>
+      </select>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">IP</label>
+        <input id="ed-ip" class="field-input" type="text" list="ip-opts" placeholder="BA, DOAC…">
+        <datalist id="ip-opts">
+          <option value="BA"><option value="HSR"><option value="THE LINE">
+          <option value="WNTT"><option value="DOAC"><option value="ALL">
+          <option value="BTD"><option value="SB"><option value="Flightbooks">
+        </datalist>
+      </div>
+      <div class="field">
+        <label class="field-label">Quarter</label>
+        <select id="ed-quarter" class="field-input">
+          <option value="NOW">Now</option><option value="Q2">Q2</option>
+          <option value="Q3">Q3</option><option value="Q4+">Q4+</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Status</label>
+        <select id="ed-status" class="field-input">
+          <option>Live</option><option>In progress</option>
+          <option>Not started</option><option>On Hold</option>
+          <option>Ready for rollout</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Effort level <span style="font-weight:400;font-style:italic;text-transform:none;letter-spacing:0;color:var(--text-3)">(auto-set from score)</span></label>
+        <select id="ed-effort" class="field-input">
+          <option value="high">High</option><option value="med">Medium</option>
+          <option value="low">Low</option><option value="ongoing">Ongoing</option>
+          <option value="unscored">Unscored</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <div class="scoring-section">
+        <div class="scoring-head">
+          <div>
+            <div class="scoring-lbl">Priority scoring</div>
+            <div class="score-wt">
+              <span class="score-wt-chip">Timeframe 20%</span>
+              <span class="score-wt-chip">Data impact 20%</span>
+              <span class="score-wt-chip">Revenue 20%</span>
+              <span class="score-wt-chip">Distribution 20%</span>
+              <span class="score-wt-chip">FTE 20%</span>
+            </div>
+          </div>
+          <div class="score-live">
+            <span class="score-live-num" id="score-live-num">—</span>
+            <span class="score-live-sub">score</span>
+          </div>
+        </div>
+        <div class="score-dims">
+          <div class="dim-row">
+            <div>
+              <div class="dim-lbl">Project timeframe</div>
+              <select class="dim-sel" id="ed-tf" onchange="recalcScore()">
+                <option value="">Select…</option>
+                <option value="5">5 — Less than 1 week</option>
+                <option value="4">4 — Within 2 weeks</option>
+                <option value="3">3 — Within 1 month</option>
+                <option value="2">2 — Within 3 months</option>
+                <option value="1">1 — 3 months+</option>
+                <option value="0">0 — 1 year+</option>
+              </select>
+            </div>
+            <div>
+              <div class="dim-lbl">FTE required</div>
+              <select class="dim-sel" id="ed-fte" onchange="recalcScore()">
+                <option value="">Select…</option>
+                <option value="5">5 — 1 FTE</option>
+                <option value="4">4 — 2–5 FTE</option>
+                <option value="3">3 — 5–10 FTE</option>
+                <option value="2">2 — 10–15 FTE</option>
+                <option value="1">1 — 15–20 FTE</option>
+                <option value="0">0 — 20+ FTE</option>
+              </select>
+            </div>
+          </div>
+          <div class="dim-full">
+            <div class="dim-lbl">Business impact — data collection</div>
+            <select class="dim-sel" id="ed-bdata" onchange="recalcScore()">
+              <option value="">Select…</option>
+              <option value="5">5 — 100k+ records</option>
+              <option value="4">4 — 50k–100k records</option>
+              <option value="3">3 — 25k–50k records</option>
+              <option value="2">2 — 10k–25k records</option>
+              <option value="1">1 — 0–10k records</option>
+              <option value="0">0 — None / not applicable</option>
+            </select>
+          </div>
+          <div class="dim-full">
+            <div class="dim-lbl">Business impact — revenue opportunity</div>
+            <select class="dim-sel" id="ed-brev" onchange="recalcScore()">
+              <option value="">Select…</option>
+              <option value="5">5 — £1m+</option>
+              <option value="4">4 — £750k–£1m</option>
+              <option value="3">3 — £500k–£750k</option>
+              <option value="2">2 — £250k–£500k</option>
+              <option value="1">1 — £0–£250k</option>
+              <option value="0">0 — None / not applicable</option>
+            </select>
+          </div>
+          <div class="dim-full">
+            <div class="dim-lbl">Business impact — distribution (views/impressions per month)</div>
+            <select class="dim-sel" id="ed-bdist" onchange="recalcScore()">
+              <option value="">Select…</option>
+              <option value="5">5 — 500k+ views/mo</option>
+              <option value="4">4 — 100k–500k views/mo</option>
+              <option value="3">3 — 50k–100k views/mo</option>
+              <option value="2">2 — 10k–50k views/mo</option>
+              <option value="1">1 — 1k–10k views/mo</option>
+              <option value="0">0 — None / not applicable</option>
+            </select>
+          </div>
+        </div>
+        <div class="score-meter">
+          <div class="score-meter-track"><div class="score-meter-fill" id="score-meter-fill" style="width:0%"></div></div>
+          <div class="score-meter-row">
+            <span class="score-meter-lbl" id="score-meter-lbl">Select all 5 to score</span>
+            <span class="score-meter-hint" id="score-dims-hint"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Deadline <span style="font-weight:400;font-style:italic;text-transform:none;letter-spacing:0;color:var(--text-3)">(auto-assigns quarter)</span></label>
+      <input id="ed-deadline" class="field-input" type="date" onchange="onDeadlineChange()">
+      <div class="deadline-hint" id="deadline-hint" style="color:var(--text-3)"></div>
+    </div>
+    <div class="mismatch-panel" id="mismatch-panel">
+      <span class="mismatch-icon" id="mismatch-icon">⛑</span>
+      <div class="mismatch-body">
+        <div class="mismatch-title" id="mismatch-title"></div>
+        <div class="mismatch-msg" id="mismatch-msg"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Section</label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="ed-section" value="Data"> Data specific</label>
+        <label class="radio-opt"><input type="radio" name="ed-section" value="BAU"> BAU</label>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn-save" onclick="saveEdit()">Save changes</button>
+    <button class="btn-delete" id="btn-delete" onclick="deleteItem()">Delete</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.getElementById('updated-date').textContent = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+
+const IP_TAG={
+  'BA':{bg:'#E1F5EE',color:'#085041'},'HSR':{bg:'#E6F1FB',color:'#0C447C'},
+  'THE LINE':{bg:'#EAF3DE',color:'#173404'},'WNTT':{bg:'#FAEEDA',color:'#412402'},
+  'DOAC':{bg:'#EEEDFE',color:'#26215C'},'ALL':{bg:'#FAECE7',color:'#4A1B0C'},
+  'BTD':{bg:'#FBEAF0',color:'#4B1528'},'SB':{bg:'#F1EFE8',color:'#2C2C2A'},
+  'Flightbooks':{bg:'#F1EFE8',color:'#2C2C2A'},
+};
+function ipTag(ip){const c=IP_TAG[ip]||{bg:'#F1EFE8',color:'#5F5E5A'};return `<span class="tag" style="background:${c.bg};color:${c.color}">${ip}</span>`;}
+function statusIcon(s){return{Live:'<span class="si si-live">●</span>','In progress':'<span class="si si-progress">●</span>','Not started':'<span class="si si-nostart">○</span>','On Hold':'<span class="si si-hold">■</span>','Ready for rollout':'<span class="si si-ready">✓</span>'}[s]||'';}
+
+// ── Base data ──
+const BASE=[
+  {owner:"Mason",ip:"BA",desc:"Landing page optimisation",score:0.68,status:"In progress",effort:"med",q:"NOW",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Owned FPD spotlight",score:0.52,status:"Live",effort:"ongoing",q:"NOW",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Manychat experiment (book lovers newsletter)",score:0.0,status:"Live",effort:"ongoing",q:"NOW",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"Thumbnail test",score:0.6,status:"On Hold",effort:"low",q:"NOW",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Landing page optimisation",score:0.64,status:"In progress",effort:"med",q:"NOW",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Thumbnail test",score:0.72,status:"On Hold",effort:"low",q:"NOW",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Landing page optimisation",score:0.68,status:"In progress",effort:"med",q:"NOW",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Quizzes testing",score:0.0,status:"Live",effort:"ongoing",q:"NOW",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Optimising RSS and Megaphone",score:0.6,status:"Live",effort:"ongoing",q:"NOW",section:"BAU"},
+  {owner:"Mason",ip:"BA",desc:"Recommend a guest",score:0.52,status:"In progress",effort:"low",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Manychat and Social campaigns",score:0.56,status:"Not started",effort:"med",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Surveys",score:0.56,status:"Not started",effort:"high",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Thumbnail test",score:0.56,status:"Not started",effort:"low",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Guest book giveaways",score:0.48,status:"In progress",effort:"low",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"Manychat and Social campaigns",score:0.56,status:"Not started",effort:"med",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"Landing page optimisation",score:0.64,status:"Not started",effort:"low",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Manychat and Social campaigns",score:0.56,status:"Not started",effort:"med",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"The Line newsletter strategy",score:0.48,status:"In progress",effort:"med",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Owned FPD spotlight",score:0.52,status:"In progress",effort:"low",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Recommend a guest",score:0.52,status:"In progress",effort:"low",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Surveys",score:0.56,status:"Not started",effort:"high",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Manychat and Social campaigns",score:0.56,status:"Not started",effort:"med",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Owned FPD spotlight",score:0.52,status:"In progress",effort:"low",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Thumbnail test",score:0.56,status:"On Hold",effort:"low",q:"Q2",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Paid Marketing Playbook",score:0.52,status:"In progress",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Mason",ip:"BA",desc:"Celebrating British",score:0.56,status:"Not started",effort:"high",q:"Q2",section:"BAU"},
+  {owner:"Mason",ip:"DOAC",desc:"Landing page optimisation",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Mason",ip:"HSR",desc:"Devil Wears Prada 2 Screenings",score:0.48,status:"In progress",effort:"high",q:"Q2",section:"BAU"},
+  {owner:"Mason",ip:"HSR",desc:"Paid Marketing Playbook",score:0.52,status:"In progress",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Mason",ip:"THE LINE",desc:"Paid Marketing Playbook",score:0.48,status:"In progress",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Mason",ip:"WNTT",desc:"Mental Health Month Campaign",score:0.6,status:"In progress",effort:"high",q:"Q2",section:"BAU"},
+  {owner:"Mason",ip:"WNTT",desc:"Paid Marketing Playbook",score:0.52,status:"In progress",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Mason",ip:"BA",desc:"Street Mate — nominate a city/friend",score:0.44,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Community story submissions",score:0.52,status:"Not started",effort:"low",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Themed episodes",score:0.52,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"BA",desc:"Whitepaper with BP team",score:0.52,status:"Not started",effort:"high",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"Recommend a guest",score:0.52,status:"Not started",effort:"low",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"Angel Application",score:0.48,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"HSR newsletter strategy",score:0.48,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"Themed episodes",score:0.44,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"Owned FPD spotlight",score:0.52,status:"Not started",effort:"low",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"First priority event access",score:0.44,status:"Not started",effort:"low",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"HSR Fund Campaign",score:0.44,status:"Not started",effort:"high",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"Quiz",score:0.44,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"HSR",desc:"HSR giveaway",score:0.4,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Recommend a guest",score:0.52,status:"Not started",effort:"low",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Themed episodes",score:0.44,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Marathon tools",score:0.44,status:"In progress",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Hamper giveaway",score:0.4,status:"In progress",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Quizzes",score:0.48,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"WNTT newsletter strategy & activation",score:0.48,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Themed episodes",score:0.44,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Digital products",score:0.44,status:"Not started",effort:"high",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Guest book giveaways",score:0.44,status:"Not started",effort:"low",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"LA competition",score:0.48,status:"Not started",effort:"high",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Submit a question / voice note (MHM)",score:0.48,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Sign up to find phone booth (MHM)",score:0.44,status:"Not started",effort:"low",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Mental health check in quiz",score:0.44,status:"Not started",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Mason",ip:"THE LINE",desc:"Boston Marathon Event",score:0.4,status:"In progress",effort:"med",q:"Q3",section:"BAU"},
+  {owner:"Mason",ip:"ALL",desc:"Sourcing distribution partners",score:0.44,status:"In progress",effort:"med",q:"Q3",section:"BAU"},
+  {owner:"Mason",ip:"Flightbooks",desc:"Book launch support",score:0.44,status:"In progress",effort:"low",q:"Q3",section:"BAU"},
+  {owner:"Mason",ip:"BA",desc:"Studio tour / backstage access",score:0.36,status:"Not started",effort:"low",q:"Q4+",section:"Data"},
+  {owner:"Mason",ip:"WNTT",desc:"Studio tour / backstage access",score:0.36,status:"Not started",effort:"low",q:"Q4+",section:"Data"},
+  {owner:"Mason",ip:"ALL",desc:"Life Fitness distribution agreement",score:0.32,status:"In progress",effort:"med",q:"Q4+",section:"BAU"},
+  {owner:"Kat",ip:"ALL",desc:"Data acquisition standardisation & template",score:0.76,status:"Ready for rollout",effort:"ongoing",q:"NOW",section:"Data"},
+  {owner:"Kat",ip:"ALL",desc:"Manychat strategy for data acquisition",score:0.64,status:"In progress",effort:"med",q:"NOW",section:"Data"},
+  {owner:"Kat",ip:"ALL",desc:"Email monetisation strategy",score:0.8,status:"In progress",effort:"high",q:"NOW",section:"BAU"},
+  {owner:"Kat",ip:"ALL",desc:"Welcome & Onboarding customer journeys",score:0.72,status:"In progress",effort:"high",q:"NOW",section:"BAU"},
+  {owner:"Kat",ip:"BTD",desc:"BTD Zapier Slack automation",score:0.0,status:"Live",effort:"ongoing",q:"NOW",section:"BAU"},
+  {owner:"Kat",ip:"ALL",desc:"Lifecycle model blueprint for all IPs",score:0.64,status:"Not started",effort:"high",q:"Q2",section:"Data"},
+  {owner:"Kat",ip:"ALL",desc:"Retention & Churn strategy for all IPs",score:0.64,status:"Not started",effort:"high",q:"Q2",section:"Data"},
+  {owner:"Kat",ip:"ALL",desc:"Creator insights foundation & reporting",score:0.48,status:"In progress",effort:"high",q:"Q2",section:"Data"},
+  {owner:"Kat",ip:"ALL",desc:"Finding AI solutions to automate episodes",score:0.6,status:"In progress",effort:"high",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"DOAC",desc:"Behind the episode campaigns",score:0.0,status:"In progress",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"DOAC",desc:"Thematic / Compilation campaigns",score:0.0,status:"In progress",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"DOAC",desc:"Framework deep dive campaigns",score:0.0,status:"In progress",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"DOAC",desc:"ecom post purchase & reviews journey",score:0.0,status:"Not started",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"DOAC",desc:"ecom abandoned browse journey",score:0.0,status:"Not started",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"DOAC",desc:"ecom replenishment journey",score:0.0,status:"Not started",effort:"high",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"DOAC",desc:"ecom back in stock journey",score:0.0,status:"Not started",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"ALL",desc:"Winback journey",score:0.0,status:"In progress",effort:"high",q:"Q2",section:"BAU"},
+  {owner:"Kat",ip:"ALL",desc:"Sunset journey",score:0.0,status:"Not started",effort:"high",q:"Q2",section:"BAU"},
+  {owner:"Kat / Mason",ip:"BA",desc:"Email Automations for weekly episode drops",score:0.68,status:"In progress",effort:"high",q:"NOW",section:"Data"},
+  {owner:"Kat / Mason",ip:"HSR",desc:"Email Automations for weekly episode drops",score:0.68,status:"In progress",effort:"high",q:"NOW",section:"Data"},
+  {owner:"Kat / Mason",ip:"WNTT",desc:"Email Automations for weekly episode drops",score:0.68,status:"In progress",effort:"high",q:"NOW",section:"Data"},
+  {owner:"Kat / Mason",ip:"THE LINE",desc:"Email Automations for weekly episode drops",score:0.4,status:"In progress",effort:"med",q:"Q3",section:"Data"},
+  {owner:"Kat / Maria",ip:"BTD",desc:"BTD Newsletter sends",score:0.0,status:"Live",effort:"ongoing",q:"NOW",section:"BAU"},
+  {owner:"Kat / Maria",ip:"BTD",desc:"BTD newsletter strategy & activation",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Kat / Maria",ip:"DOAC",desc:"DOAC newsletter strategy & activation",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Kat / Maria",ip:"DOAC",desc:"Watch DOAC Live / Referral 1PD project",score:0.6,status:"In progress",effort:"high",q:"Q2",section:"BAU"},
+  {owner:"Kat / Tash",ip:"DOAC",desc:"CRM / Abandoned cart funnel testing",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"BTD",desc:"BTD Newsletter paid ads",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Newsletter Paid ads",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Nova Q2",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"SB Book",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Multi-title assets (Thematic & overall DOAC)",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Product Paid",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Product Campaigns",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Ad read — guests/topics",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Ad read — show takeaways",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Quiz",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Hamper",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Newsletter launch on social",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Lead Magnets for Paid",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Lead Magnets for Organic",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Newsletter 0PD sequencing",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Paid Lead Magnet experiment",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Foundations (add links to everywhere)",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Youtube Shorts Experiment",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC cross-channel alignment",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Showgrowth paid (£10K monthly)",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"BTD Asset rollout (post brand work)",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Asset rollout (post brand work)",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC website",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"Product Event (May)",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Influencer Roster",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria",ip:"DOAC",desc:"DOAC Kids",score:0.0,status:"On Hold",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Maria / Clare",ip:"SB",desc:"JFDI Book",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Tash",ip:"DOAC",desc:"Corporate Order email test",score:0.0,status:"In progress",effort:"ongoing",q:"NOW",section:"BAU"},
+  {owner:"Tash",ip:"DOAC",desc:"Offer vs Social Proof vs Control group",score:0.0,status:"In progress",effort:"ongoing",q:"NOW",section:"BAU"},
+  {owner:"Tash",ip:"DOAC",desc:"Paid Ads testing",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Tash",ip:"DOAC",desc:"Landing page optimisation (YT framing)",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Tash",ip:"DOAC",desc:"Lead magnet and funnel experiment",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Tash",ip:"DOAC",desc:"Paid for digital product add ons",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Tash",ip:"DOAC",desc:"Cross selling circle & products",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Kayley",ip:"BA",desc:"Begin Again website",score:0.64,status:"On Hold",effort:"med",q:"NOW",section:"BAU"},
+  {owner:"Kayley",ip:"BA",desc:"Nova — Distribution and brand growth in Aus",score:0.6,status:"In progress",effort:"med",q:"Q2",section:"BAU"},
+  {owner:"Kayley",ip:"DOAC",desc:"Nova — Distribution and brand growth in Aus (DOAC)",score:0.0,status:"In progress",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Clare",ip:"DOAC",desc:"Brand strategy",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Clare",ip:"BTD",desc:"Brand strategy",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Pollyanna",ip:"WNTT",desc:"Brand refresh",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+  {owner:"Pollyanna",ip:"BA",desc:"Brand refresh",score:0.0,status:"Not started",effort:"unscored",q:"Q2",section:"BAU"},
+];
+
+const PEOPLE=[
+  {id:"Mason",name:"Mason",color:"#993556",bg:"#FBEAF0"},
+  {id:"Kat",name:"Kat",color:"#534AB7",bg:"#EEEDFE"},
+  {id:"Kat / Mason",name:"Kat + Mason",color:"#0F6E56",bg:"#E1F5EE"},
+  {id:"Kat / Maria",name:"Kat + Maria",color:"#185FA5",bg:"#E6F1FB"},
+  {id:"Maria",name:"Maria",color:"#854F0B",bg:"#FAEEDA"},
+  {id:"Tash",name:"Tash",color:"#712B13",bg:"#FAECE7"},
+  {id:"Kat / Tash",name:"Kat + Tash",color:"#A32D2D",bg:"#FCEBEB"},
+  {id:"Kayley",name:"Kayley",color:"#3B6D11",bg:"#EAF3DE"},
+  {id:"Clare",name:"Clare",color:"#5F5E5A",bg:"#F1EFE8"},
+  {id:"Pollyanna",name:"Pollyanna",color:"#5F5E5A",bg:"#F1EFE8"},
+  {id:"Maria / Clare",name:"Maria + Clare",color:"#854F0B",bg:"#FAEEDA"},
+];
+
+const QUARTERS=['NOW','Q2','Q3','Q4+'];
+const MAIN_IPS=['BA','HSR','THE LINE','WNTT','DOAC','ALL'];
+const EFFORT_CLS={high:'card-high',med:'card-med',low:'card-low',ongoing:'card-ongoing',unscored:'card-unscored'};
+
+// ── Firebase config — paste your config from Firebase console here ──
+const firebaseConfig = {
+  apiKey:            "AIzaSyALpT0SBTS-x4UmjosIMue7GKcX5NJZ8jk",
+  authDomain:        "prioritisation-tracker.firebaseapp.com",
+  projectId:         "prioritisation-tracker",
+  storageBucket:     "prioritisation-tracker.firebasestorage.app",
+  messagingSenderId: "66834227490",
+  appId:             "1:66834227490:web:3edd095a6c5eb25dbdc57b"
+};
+// ── Firebase setup ──
+const COLLECTION = 'projects';
+const IS_CONFIGURED = !firebaseConfig.apiKey.startsWith('PASTE');
+let db = null;
+
+if(IS_CONFIGURED){
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+}
+
+// ── Data ──
+let DATA=[], nextId=0;
+
+async function seedIfEmpty(){
+  if(!db) return;
+  const snap = await db.collection(COLLECTION).limit(1).get();
+  if(!snap.empty) return;
+  const batch = db.batch();
+  BASE.forEach((p,i)=>{
+    const doc = db.collection(COLLECTION).doc(String(i));
+    batch.set(doc, {...p, _id:i});
+  });
+  await batch.commit();
+}
+
+function initData(){
+  if(!IS_CONFIGURED){
+    // Firebase not yet configured — show setup banner and run on BASE data
+    showSetupBanner();
+    DATA = BASE.map((p,i)=>({...p,_id:i}));
+    nextId = DATA.length;
+    document.getElementById('loading').style.display='none';
+    render();
+    return;
+  }
+  db.collection(COLLECTION).onSnapshot(snap=>{
+    DATA = snap.docs.map(d=>d.data());
+    nextId = DATA.length>0 ? Math.max(...DATA.map(p=>p._id||0))+1 : BASE.length;
+    document.getElementById('loading').style.display='none';
+    render();
+  }, err=>{
+    console.error('Firestore error:', err);
+    DATA = BASE.map((p,i)=>({...p,_id:i}));
+    nextId = DATA.length;
+    document.getElementById('loading').style.display='none';
+    render();
+  });
+  seedIfEmpty();
+}
+
+function showSetupBanner(){
+  const b = document.createElement('div');
+  b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#1A1917;color:#fff;font-size:12px;padding:10px 20px;z-index:500;display:flex;align-items:center;gap:12px;line-height:1.4';
+  b.innerHTML='<span style="font-size:16px">&#x1F527;</span><span><strong>Firebase not configured yet</strong> — running in preview mode (edits won’t save). Follow the deploy guide to go live.</span><button onclick="this.parentElement.remove()" style="margin-left:auto;background:rgba(255,255,255,0.15);border:none;color:#fff;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px">Dismiss</button>';
+  document.body.appendChild(b);
+}
+
+async function saveToStorage(){
+  // no-op — writes go directly to Firestore in each action function
+}
+
+// ── Filters ──
+let activeEffort=new Set(['high','med','low','ongoing','unscored']);
+let activeSec=new Set(['Data','BAU']);
+let activeIP=new Set([...MAIN_IPS,'OTHER']);
+function ipGroup(ip){return MAIN_IPS.includes(ip)?ip:'OTHER';}
+function isVisible(p){return activeEffort.has(p.effort)&&activeSec.has(p.section)&&activeIP.has(ipGroup(p.ip));}
+
+// ── Render ──
+function initials(n){return n.split(/[\s\/+]+/).filter(Boolean).map(w=>w[0].toUpperCase()).slice(0,2).join('');}
+
+function renderCard(p){
+  const cls=EFFORT_CLS[p.effort]||'card-unscored';
+  const barW=p.score>0?Math.round(p.score*100):0;
+  const vis=isVisible(p);
+  const mm=getMismatch(p._deadline,p.score);
+  const mmCls=mm?(mm.severity==='alert'?' mm-alert':mm.severity==='warn'?' mm-warn':''):'';
+  const mmFlag=mm?('<span class="mm-flag mm-flag-'+mm.severity+'" title="'+mm.title+'">⛑</span>'):'';
+  return `<div class="card ${cls}${mmCls}${vis?'':' hidden'}"
+    draggable="true"
+    data-id="${p._id}"
+    ondragstart="onDragStart(event,${p._id})"
+    ondragend="onDragEnd(event)"
+    onclick="openEdit(${p._id})">
+    <div class="card-desc"><span class="drag-handle">⠿</span>${statusIcon(p.status)}<span>${p.desc}</span>${mmFlag}<span class="edit-hint">✎ edit</span></div>
+    <div class="card-meta">${ipTag(p.ip)}<span class="tag ${p.section==='Data'?'tag-data':'tag-bau'}">${p.section}</span>${p.score>0?`<span class="score-t">${Math.round(p.score*100)}%</span>`:''}${p._deadline?deadlineChip(p._deadline):''}</div>
+    <div class="score-bar"><div class="score-fill" style="width:${barW}%"></div></div>
+  </div>`;
+}
+
+function renderQCell(items){
+  const dataItems=items.filter(p=>p.section==='Data');
+  const bauItems=items.filter(p=>p.section==='BAU');
+  const hasBoth=dataItems.length>0&&bauItems.length>0;
+  let html='';
+  if(hasBoth){
+    html+=`<div class="sec-head">Data specific</div>`+dataItems.map(renderCard).join('');
+    html+=`<div class="sec-head">BAU</div>`+bauItems.map(renderCard).join('');
+  }else{html+=items.map(renderCard).join('');}
+  return items.some(isVisible)?html:'<span class="empty-cell">—</span>';
+}
+
+function loadBar(personId){
+  const items=DATA.filter(p=>p.owner===personId);
+  const counts={NOW:0,Q2:0,Q3:0,'Q4+':0};
+  items.forEach(p=>{if(counts[p.q]!==undefined)counts[p.q]++;});
+  const total=Math.max(items.length,1);
+  const seg=(n,cls)=>n?`<span class="lb-seg ${cls}" style="width:${Math.max(3,Math.round(n/total*60))}px" title="${cls.replace('lb-','').toUpperCase()}: ${n}"></span>`:'';
+  return `<div class="load-bar">${seg(counts.NOW,'lb-now')}${seg(counts.Q2,'lb-q2')}${seg(counts.Q3,'lb-q3')}${seg(counts['Q4+'],'lb-q4')}</div>`;
+}
+
+function loadChip(personId){
+  const items=DATA.filter(p=>p.owner===personId);
+  const high=items.filter(p=>p.effort==='high').length;
+  const total=items.length;
+  let cls,label;
+  if(high>=5){cls='lc-red';label=`${total} items · ${high} high`;}
+  else if(high>=3||total>15){cls='lc-amber';label=`${total} items · ${high} high`;}
+  else if(total>0){cls='lc-green';label=`${total} items`;}
+  else{cls='lc-gray';label='0 items';}
+  return `<span class="load-chip ${cls}">${label}</span>`;
+}
+
+function updateStats(){
+  const vis=DATA.filter(isVisible);
+  const uns=vis.filter(p=>p.effort==='unscored').length;
+  document.getElementById('stats-bar').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Visible projects</div><div class="stat-val">${vis.length}</div><div class="stat-sub">of ${DATA.length} total</div></div>
+    <div class="stat-card"><div class="stat-label">Active now</div><div class="stat-val">${vis.filter(p=>p.q==='NOW').length}</div><div class="stat-sub">immediate priority</div></div>
+    <div class="stat-card"><div class="stat-label">In Q2</div><div class="stat-val">${vis.filter(p=>p.q==='Q2').length}</div><div class="stat-sub">Apr – Jun</div></div>
+    <div class="stat-card"><div class="stat-label">High effort</div><div class="stat-val">${vis.filter(p=>p.effort==='high').length}</div><div class="stat-sub">need sustained focus</div></div>
+    <div class="stat-card stat-warn"><div class="stat-label">Unscored</div><div class="stat-val warn">${uns}</div></div>`;
+
+}
+
+function render(){
+  const tbody=document.getElementById('tbody');
+  let html='';
+  PEOPLE.forEach(person=>{
+    const items=DATA.filter(p=>p.owner===person.id);
+    if(!items.length)return;
+    const visCount=items.filter(isVisible).length;
+    const ownerAttr=person.id.replace(/"/g,'&quot;');
+    let row=`<tr><td class="person-cell">
+      <div class="avatar" style="background:${person.bg};color:${person.color}">${initials(person.name)}</div>
+      <div class="person-name" style="color:${person.color}">${person.name}</div>
+      <div class="person-count">${visCount}/${items.length}</div>
+      ${loadBar(person.id)}${loadChip(person.id)}
+    </td>`;
+    QUARTERS.forEach(q=>{
+      const qItems=items.filter(p=>p.q===q);
+      const cellContent=qItems.length?renderQCell(qItems):'<span class="empty-cell">Drop here</span>';
+      row+=`<td class="q-cell" data-owner="${ownerAttr}" data-q="${q}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">${cellContent}</td>`;
+    });
+    html+=row+'</tr>';
+  });
+  const knownOwners=new Set(PEOPLE.map(p=>p.id));
+  const newPeople=[...new Set(DATA.filter(p=>!knownOwners.has(p.owner)).map(p=>p.owner))];
+  newPeople.forEach(owner=>{
+    const items=DATA.filter(p=>p.owner===owner);
+    const ini=initials(owner);
+    const ownerAttr=owner.replace(/"/g,'&quot;');
+    let row=`<tr><td class="person-cell">
+      <div class="avatar" style="background:#F1EFE8;color:#5F5E5A">${ini}</div>
+      <div class="person-name">${owner}</div>
+      <div class="person-count">${items.length} items</div>
+    </td>`;
+    QUARTERS.forEach(q=>{
+      const qItems=items.filter(p=>p.q===q);
+      const cellContent=qItems.length?renderQCell(qItems):'<span class="empty-cell">Drop here</span>';
+      row+=`<td class="q-cell" data-owner="${ownerAttr}" data-q="${q}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">${cellContent}</td>`;
+    });
+    html+=row+'</tr>';
+  });
+  tbody.innerHTML=html;
+  updateStats();
+}
+
+// ── Drag & drop ──
+let dragId=null;
+let wasDragging=false;
+
+function onDragStart(e,id){
+  dragId=id;
+  wasDragging=true;
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',String(id));
+  // Fade the card after a tick so the drag ghost looks clean
+  setTimeout(()=>{
+    const el=document.querySelector('.card[data-id="'+id+'"]');
+    if(el)el.classList.add('dragging');
+  },0);
+}
+
+function onDragEnd(e){
+  document.querySelectorAll('.card.dragging').forEach(el=>el.classList.remove('dragging'));
+  document.querySelectorAll('.q-cell.drop-active').forEach(el=>el.classList.remove('drop-active'));
+  dragId=null;
+  // Keep wasDragging true briefly so the click handler that fires right after can bail
+  setTimeout(()=>{wasDragging=false;},50);
+}
+
+function onDragOver(e){
+  if(dragId===null)return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  e.currentTarget.classList.add('drop-active');
+}
+
+function onDragLeave(e){
+  // Only remove highlight if leaving the cell entirely (not entering a child)
+  if(!e.currentTarget.contains(e.relatedTarget)){
+    e.currentTarget.classList.remove('drop-active');
+  }
+}
+
+function onDrop(e){
+  e.preventDefault();
+  const cell=e.currentTarget;
+  cell.classList.remove('drop-active');
+  const id=parseInt(e.dataTransfer.getData('text/plain'));
+  if(isNaN(id))return;
+  const newOwner=cell.dataset.owner;
+  const newQ=cell.dataset.q;
+  const idx=DATA.findIndex(x=>x._id===id);
+  if(idx<0)return;
+  const p=DATA[idx];
+  if(p.owner===newOwner&&p.q===newQ)return;
+  const fromLabel=p.owner+' \u00b7 '+p.q;
+  if(!IS_CONFIGURED){
+    const idx2=DATA.findIndex(x=>x._id===id);
+    if(idx2>=0){DATA[idx2].owner=newOwner;DATA[idx2].q=newQ;}
+    render();toast('Moved (preview mode)');return;
+  }
+  db.collection(COLLECTION).doc(String(id)).update({owner:newOwner,q:newQ})
+    .then(()=>toast('Moved from '+fromLabel+' \u2192 '+newOwner+' \u00b7 '+newQ))
+    .catch(e=>toast('Move failed: '+e.message));
+}
+
+// ── Edit drawer ──
+let editingId=null;
+
+function openEdit(id){
+  if(wasDragging)return;
+  editingId=id;
+  const p=DATA.find(x=>x._id===id);
+  if(!p)return;
+  document.getElementById('drawer-title').textContent='Edit project';
+  document.getElementById('ed-desc').value=p.desc;
+  document.getElementById('ed-owner').value=p.owner;
+  document.getElementById('ed-ip').value=p.ip;
+  document.getElementById('ed-status').value=p.status;
+  document.getElementById('ed-effort').value=p.effort;
+  document.getElementById('ed-quarter').value=p.q;
+  document.querySelector(`input[name="ed-section"][value="${p.section}"]`).checked=true;
+  // Populate scoring dimensions
+  document.getElementById('ed-tf').value=p._tf!==undefined?p._tf:'';
+  document.getElementById('ed-bdata').value=p._bdata!==undefined?p._bdata:'';
+  document.getElementById('ed-brev').value=p._brev!==undefined?p._brev:'';
+  document.getElementById('ed-bdist').value=p._bdist!==undefined?p._bdist:'';
+  document.getElementById('ed-fte').value=p._fte!==undefined?p._fte:'';
+  document.getElementById('ed-deadline').value=p._deadline||'';
+  onDeadlineChange();
+  document.getElementById('btn-delete').style.display='';
+  recalcScore();
+  updateMismatchPanel();
+  showDrawer();
+}
+
+function openNew(){
+  editingId=null;
+  document.getElementById('drawer-title').textContent='Add project';
+  document.getElementById('ed-desc').value='';
+  document.getElementById('ed-owner').value='Mason';
+  document.getElementById('ed-ip').value='';
+  document.getElementById('ed-status').value='Not started';
+  document.getElementById('ed-effort').value='unscored';
+  document.getElementById('ed-quarter').value='Q2';
+  document.querySelector('input[name="ed-section"][value="Data"]').checked=true;
+  // Clear scoring dimensions
+  ['ed-tf','ed-bdata','ed-brev','ed-bdist','ed-fte'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ed-deadline').value='';
+  document.getElementById('deadline-hint').textContent='';
+  document.getElementById('mismatch-panel').className='mismatch-panel';
+  document.getElementById('btn-delete').style.display='none';
+  recalcScore();
+  showDrawer();
+}
+
+function showDrawer(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  editingId=null;
+}
+
+function saveEdit(){
+  const desc=document.getElementById('ed-desc').value.trim();
+  if(!desc){document.getElementById('ed-desc').focus();return;}
+  const section=document.querySelector('input[name="ed-section"]:checked')?.value||'BAU';
+  const deadlineVal=document.getElementById('ed-deadline').value||undefined;
+  // If deadline set, let it drive the quarter
+  if(deadlineVal){
+    const autoQ=dateToQuarter(deadlineVal);
+    if(autoQ)document.getElementById('ed-quarter').value=autoQ;
+  }
+
+  // Read dimension scores
+  const getDim=id=>{const v=document.getElementById(id).value;return v===''?undefined:parseInt(v);};
+  const dims={_tf:getDim('ed-tf'),_bdata:getDim('ed-bdata'),_brev:getDim('ed-brev'),_bdist:getDim('ed-bdist'),_fte:getDim('ed-fte')};
+  const calcedScore=recalcScore();
+  const score=calcedScore!==null?calcedScore:0;
+
+  // Auto-set effort tier from score if all dims filled
+  let effort=document.getElementById('ed-effort').value;
+  if(calcedScore!==null){
+    if(calcedScore>=0.64)effort='high';
+    else if(calcedScore>=0.52)effort='med';
+    else effort='low';
+  }
+
+  const updated={
+    desc,
+    owner:document.getElementById('ed-owner').value,
+    ip:document.getElementById('ed-ip').value.trim()||'ALL',
+    score,
+    status:document.getElementById('ed-status').value,
+    effort,
+    q:document.getElementById('ed-quarter').value,
+    section,
+    _deadline:deadlineVal,
+    ...dims,
+  };
+  if(!IS_CONFIGURED){
+    // Preview mode — update local DATA only
+    if(editingId!==null){const idx=DATA.findIndex(x=>x._id===editingId);if(idx>=0)DATA[idx]={...DATA[idx],...updated};}
+    else{DATA.push({...updated,_id:nextId++});}
+    closeDrawer();render();toast(IS_CONFIGURED?'Saved':'Saved locally (preview mode)');return;
+  }
+  if(editingId!==null){
+    db.collection(COLLECTION).doc(String(editingId)).update(updated)
+      .then(()=>toast('Project updated'))
+      .catch(e=>toast('Save failed: '+e.message));
+  }else{
+    const newId=nextId++;
+    db.collection(COLLECTION).doc(String(newId)).set({...updated,_id:newId})
+      .then(()=>toast('Project added'))
+      .catch(e=>toast('Save failed: '+e.message));
+  }
+  closeDrawer();
+}
+
+function deleteItem(){
+  if(editingId===null)return;
+  const p=DATA.find(x=>x._id===editingId);
+  if(!confirm(`Delete "${p?.desc||'this project'}"?`))return;
+  if(!IS_CONFIGURED){
+    DATA=DATA.filter(x=>x._id!==editingId);closeDrawer();render();toast('Deleted (preview mode)');return;
+  }
+  db.collection(COLLECTION).doc(String(editingId)).delete()
+    .then(()=>toast('Project deleted'))
+    .catch(e=>toast('Delete failed: '+e.message));
+  closeDrawer();
+}
+
+function getMismatch(ds,score){
+  if(!ds)return null;
+  const d=new Date(ds+'T00:00:00');
+  const today=new Date();today.setHours(0,0,0,0);
+  const days=Math.ceil((d-today)/(1000*60*60*24));
+  const pct=Math.round((score||0)*100);
+  const when=days<0?'overdue':days===0?'due today':'due in '+days+(days===1?' day':' days');
+
+  if(!score||score===0){
+    return{severity:'warn',icon:'⛑',title:'No priority score set',
+      msg:'This project has a deadline but no priority score. Score it first so you can judge whether the urgency is justified.'};
+  }
+  if(days<=14&&score<0.52){
+    return{severity:'alert',icon:'⛑',title:'Urgency vs priority mismatch',
+      msg:'This project is '+when+' but its priority score is only '+pct+'%. Why the urgency? Consider whether the deadline is firm or the score needs revisiting.'};
+  }
+  if(days<=30&&score<0.40){
+    return{severity:'warn',icon:'⛑',title:'Low priority, near deadline',
+      msg:'Due in '+days+' days with a '+pct+'% priority score. Worth questioning whether this deadline is firm or resources should be reallocated.'};
+  }
+  if(days<=60&&score<0.32){
+    return{severity:'info',icon:'⛑',title:'Low priority, upcoming deadline',
+      msg:'Due in '+days+' days with a '+pct+'% score. Keep an eye on whether the effort is proportionate to the business impact.'};
+  }
+  return null;
+}
+
+function updateMismatchPanel(){
+  const ds=document.getElementById('ed-deadline').value;
+  const numEl=document.getElementById('score-live-num');
+  const scoreText=numEl?numEl.textContent.trim():'';
+  const score=scoreText.endsWith('%')?parseInt(scoreText)/100:0;
+  const panel=document.getElementById('mismatch-panel');
+  if(!panel)return;
+  const mm=getMismatch(ds,score);
+  if(!mm){panel.className='mismatch-panel';return;}
+  panel.className='mismatch-panel active mp-'+mm.severity;
+  document.getElementById('mismatch-icon').textContent=mm.icon;
+  document.getElementById('mismatch-title').textContent=mm.title;
+  document.getElementById('mismatch-msg').textContent=mm.msg;
+}
+
+function dateToQuarter(ds){
+  if(!ds)return null;
+  const d=new Date(ds+'T00:00:00');
+  const today=new Date();today.setHours(0,0,0,0);
+  const days=Math.ceil((d-today)/(1000*60*60*24));
+  if(days<=14)return 'NOW';
+  const m=d.getMonth(),y=d.getFullYear();
+  if(y===2026&&m>=3&&m<=5)return 'Q2';
+  if(y===2026&&m>=6&&m<=8)return 'Q3';
+  return 'Q4+';
+}
+
+function deadlineChip(ds){
+  const d=new Date(ds+'T00:00:00');
+  const today=new Date();today.setHours(0,0,0,0);
+  const days=Math.ceil((d-today)/(1000*60*60*24));
+  const lbl=days<0?'Overdue':days===0?'Today':days<=6?days+'d left':d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  const cls=days<0||days===0?'deadline-overdue':days<=14?'deadline-soon':'deadline-ok';
+  const full=d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  return '<span class="deadline-chip '+cls+'" title="Deadline: '+full+'">'+String.fromCodePoint(0x1F4C5)+' '+lbl+'</span>';
+}
+
+function onDeadlineChange(){
+  const ds=document.getElementById('ed-deadline').value;
+  const hint=document.getElementById('deadline-hint');
+  if(!ds){hint.textContent='';return;}
+  const q=dateToQuarter(ds);
+  document.getElementById('ed-quarter').value=q;
+  const d=new Date(ds+'T00:00:00');
+  const today=new Date();today.setHours(0,0,0,0);
+  const days=Math.ceil((d-today)/(1000*60*60*24));
+  let msg,col;
+  if(days<0){msg='Overdue — moved to Now';col='#A32D2D';}
+  else if(days===0){msg='Due today — moved to Now';col='#A32D2D';}
+  else if(days<=14){msg='Due in '+days+' day'+(days===1?'':'s')+' — moved to Now';col='#854F0B';}
+  else{msg='Auto-assigned to '+q;col='var(--text-3)';}
+  hint.style.color=col;hint.textContent=msg;
+  updateMismatchPanel();
+}
+
+function recalcScore(){
+  const DIMS=['ed-tf','ed-bdata','ed-brev','ed-bdist','ed-fte'];
+  const vals=DIMS.map(id=>{const v=document.getElementById(id).value;return v===''?null:parseInt(v);});
+  const filled=vals.filter(v=>v!==null).length;
+  const allSet=filled===5;
+  const sum=vals.reduce((a,v)=>a+(v===null?0:v),0);
+  const score=allSet?parseFloat((sum*0.04).toFixed(2)):null;
+  const pct=allSet?Math.round(sum*4):null;
+
+  const numEl=document.getElementById('score-live-num');
+  const fillEl=document.getElementById('score-meter-fill');
+  const lblEl=document.getElementById('score-meter-lbl');
+  const hintEl=document.getElementById('score-dims-hint');
+
+  // Style each select to show filled state
+  DIMS.forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('filled',vals[i]!==null);
+  });
+
+  if(allSet){
+    numEl.textContent=pct+'%';
+    numEl.className='score-live-num '+(pct>=70?'sl-high':pct>=50?'sl-med':'sl-low');
+    const col=pct>=70?'#1D9E75':pct>=50?'#EF9F27':'#F09595';
+    fillEl.style.width=pct+'%';
+    fillEl.style.background=col;
+    lblEl.textContent='Combined score: '+score.toFixed(2);
+    hintEl.textContent='';
+  }else{
+    numEl.textContent='—';
+    numEl.className='score-live-num';
+    fillEl.style.width='0%';
+    fillEl.style.background='#B4B2A9';
+    lblEl.textContent=filled===0?'Select all 5 dimensions to score':filled+'/5 dimensions set';
+    hintEl.textContent=filled>0?(5-filled)+' remaining':'';
+  }
+  updateMismatchPanel();
+  return score;
+}
+
+// ── Toast ──
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+// ── Toggle helpers ──
+function togEffort(el){const f=el.dataset.f;if(activeEffort.has(f)){activeEffort.delete(f);el.classList.add('off');}else{activeEffort.add(f);el.classList.remove('off');}render();}
+function togSec(el){const f=el.dataset.f;if(activeSec.has(f)){activeSec.delete(f);el.classList.add('off');}else{activeSec.add(f);el.classList.remove('off');}render();}
+function togIP(el){const f=el.dataset.f;if(activeIP.has(f)){activeIP.delete(f);el.classList.add('off');}else{activeIP.add(f);el.classList.remove('off');}render();}
+function toggleCompact(){document.body.classList.toggle('compact');document.getElementById('compact-btn').classList.toggle('active');}
+
+// Keyboard shortcut: Escape closes drawer
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+
+initData();
+</script>
+</body>
+</html>
